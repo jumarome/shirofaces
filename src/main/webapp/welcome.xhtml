@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./masterTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:shiro="http://shiro.apache.org/tags"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+
+    <ui:define name="tittle">
+        Welcome, <shiro:user><shiro:principal/></shiro:user>
+    </ui:define>
+    <ui:define name="left">
+        <shiro:guest>
+            <p>Welcome Guest</p> 
+            <p:link value="Log in" outcome="/login" />
+        </shiro:guest>
+        <shiro:authenticated>
+            <p>Welcome, #{login.username} </p> 
+            <h:form>
+                <p:commandLink value="Log Out" action="#{logout.logout()}" />
+            </h:form>
+
+
+        </shiro:authenticated>
+
+
+    </ui:define>
+
+
+
+    <ui:define name="content">
+
+        <p:fieldset legend="User Info" style="margin-bottom:20px">
+            <h:panelGrid columns="2" cellpadding="5">
+
+                <shiro:authenticated >
+                    <p>Hi, you have authenticated with the user: #{login.username}  </p> 
+                </shiro:authenticated>
+
+                <shiro:guest>
+                    <h:outputText value="Hi Guest,this is a public page, all users have access to it" /> 
+
+                </shiro:guest>
+
+                <shiro:hasRole name="administrador">
+                    <p>You are the system administrator and you have all power</p>
+
+                </shiro:hasRole>
+
+                <shiro:lacksRole name="administrador">
+                    Sorry, you are not allowed to administer the system.
+                </shiro:lacksRole>
+
+                <shiro:hasRole name="empleado">
+                    <p>Employee Content</p>
+
+                </shiro:hasRole>
+
+                <shiro:hasPermission name="user:create">
+                    <p>You have permissions to create users </p>
+                </shiro:hasPermission>
+
+                <shiro:lacksPermission name="user:create">
+                    <p>You dont´t have permissions to create users</p>
+                </shiro:lacksPermission>
+            </h:panelGrid>
+        </p:fieldset>
+
+
+
+
+
+
+    </ui:define>
+
+
+
+</ui:composition>
